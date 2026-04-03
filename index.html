@@ -1,0 +1,1909 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dog Lovers | Fundación de Rescate Canino</title>
+  <meta name="description" content="Rescatamos, rehabilitamos y encontramos hogares para perros callejeros. Únete a nuestra misión de amor.">
+
+  <!-- Bootstrap 5 -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+  <style>
+    /* ============================================================
+       CSS VARIABLES & BASE
+    ============================================================ */
+    :root {
+      --amber:       #E07A20;
+      --amber-light: #F4A442;
+      --amber-glow:  rgba(224,122,32,0.15);
+      --terra:       #8B3A0F;
+      --cream:       #FDF6EC;
+      --cream-dark:  #F5E9D6;
+      --forest:      #2E5218;
+      --forest-mid:  #3D6B22;
+      --bark:        #1A0D06;
+      --bark-soft:   #3D2314;
+      --sand:        #D4B896;
+      --warm-white:  #FFFBF5;
+      --shadow-warm: 0 20px 60px rgba(26,13,6,.12);
+      --shadow-card: 0 8px 32px rgba(26,13,6,.10);
+      --radius-xl:   24px;
+      --radius-pill: 50px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; font-size: 16px; }
+
+    body {
+      font-family: 'Nunito', sans-serif;
+      background: var(--cream);
+      color: var(--bark-soft);
+      overflow-x: hidden;
+    }
+
+    h1, h2, h3, h4 {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 700;
+      line-height: 1.15;
+    }
+
+    /* ============================================================
+       CUSTOM CURSOR
+    ============================================================ */
+    .cursor {
+      width: 18px; height: 18px;
+      border: 2px solid var(--amber);
+      border-radius: 50%;
+      position: fixed;
+      top: 0; left: 0;
+      pointer-events: none;
+      z-index: 9999;
+      transition: transform .15s ease, background .15s ease;
+      mix-blend-mode: multiply;
+    }
+    .cursor.active { transform: scale(2.5); background: var(--amber-glow); }
+
+    /* ============================================================
+       NOISE OVERLAY
+    ============================================================ */
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.035'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 9998;
+    }
+
+    /* ============================================================
+       NAVBAR
+    ============================================================ */
+    .navbar {
+      background: transparent;
+      padding: 1.4rem 0;
+      transition: all .4s ease;
+      position: fixed;
+      width: 100%;
+      top: 0;
+      z-index: 1000;
+    }
+    .navbar.scrolled {
+      background: rgba(253,246,236,.96);
+      backdrop-filter: blur(16px);
+      padding: .9rem 0;
+      box-shadow: 0 2px 24px rgba(26,13,6,.08);
+    }
+    .navbar-brand {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--bark) !important;
+      letter-spacing: -.5px;
+    }
+    .navbar-brand span { color: var(--amber); }
+    .nav-link {
+      font-family: 'Nunito', sans-serif;
+      font-weight: 600;
+      font-size: .88rem;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      color: var(--bark-soft) !important;
+      transition: color .2s;
+      padding: .5rem 1rem !important;
+    }
+    .nav-link:hover { color: var(--amber) !important; }
+    .btn-nav {
+      background: var(--amber);
+      color: #fff !important;
+      border-radius: var(--radius-pill);
+      padding: .55rem 1.5rem !important;
+      font-size: .85rem;
+      transition: background .2s, transform .2s;
+    }
+    .btn-nav:hover { background: var(--terra); transform: translateY(-1px); }
+    .navbar-toggler { border: none; color: var(--bark); }
+    .navbar-toggler:focus { box-shadow: none; }
+
+    /* ============================================================
+       HERO
+    ============================================================ */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(135deg, #FFF5E6 0%, #FAE8CC 40%, #F0D4A8 100%);
+      padding-top: 100px;
+    }
+
+    /* Background paw prints */
+    .hero-paws {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      overflow: hidden;
+    }
+    .paw {
+      position: absolute;
+      font-size: 3rem;
+      opacity: .06;
+      animation: pawFloat 8s ease-in-out infinite;
+    }
+    .paw:nth-child(1)  { top:10%; left:5%;   animation-delay: 0s;   font-size:2rem; }
+    .paw:nth-child(2)  { top:25%; left:88%;  animation-delay: 1.5s; font-size:4rem; }
+    .paw:nth-child(3)  { top:60%; left:15%;  animation-delay: 3s;   font-size:1.5rem; }
+    .paw:nth-child(4)  { top:75%; left:70%;  animation-delay: .8s;  font-size:3.5rem; }
+    .paw:nth-child(5)  { top:45%; left:50%;  animation-delay: 2s;   font-size:2.5rem; }
+    .paw:nth-child(6)  { top:85%; left:30%;  animation-delay: 4s;   font-size:2rem; }
+    .paw:nth-child(7)  { top:5%;  left:60%;  animation-delay: .3s;  font-size:1.8rem; }
+    .paw:nth-child(8)  { top:55%; left:92%;  animation-delay: 3.5s; font-size:2.8rem; }
+    @keyframes pawFloat {
+      0%, 100% { transform: translateY(0) rotate(-10deg); }
+      50%       { transform: translateY(-18px) rotate(10deg); }
+    }
+
+    .hero-blob {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      pointer-events: none;
+    }
+    .blob-1 {
+      width: 600px; height: 600px;
+      background: radial-gradient(circle, rgba(224,122,32,.2), transparent 70%);
+      top: -150px; right: -100px;
+      animation: blobPulse 6s ease-in-out infinite;
+    }
+    .blob-2 {
+      width: 400px; height: 400px;
+      background: radial-gradient(circle, rgba(46,82,24,.15), transparent 70%);
+      bottom: -80px; left: -60px;
+      animation: blobPulse 8s ease-in-out infinite reverse;
+    }
+    @keyframes blobPulse {
+      0%, 100% { transform: scale(1); }
+      50%       { transform: scale(1.08); }
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: .5rem;
+      background: rgba(224,122,32,.12);
+      border: 1px solid rgba(224,122,32,.3);
+      color: var(--amber);
+      font-size: .78rem;
+      font-weight: 800;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      padding: .4rem 1rem;
+      border-radius: var(--radius-pill);
+      margin-bottom: 1.5rem;
+      animation: fadeUp .8s ease both;
+    }
+    .hero-badge .dot {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: var(--amber);
+      animation: blink 1.4s ease infinite;
+    }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.2} }
+
+    .hero-title {
+      font-size: clamp(3.2rem, 8vw, 7rem);
+      color: var(--bark);
+      line-height: 1.05;
+      animation: fadeUp .9s .15s ease both;
+    }
+    .hero-title .accent { color: var(--amber); }
+    .hero-title em { font-style: italic; color: var(--forest); }
+
+    .hero-sub {
+      font-size: 1.12rem;
+      color: var(--bark-soft);
+      opacity: .8;
+      max-width: 480px;
+      line-height: 1.75;
+      margin: 1.5rem 0 2.5rem;
+      font-weight: 400;
+      animation: fadeUp 1s .3s ease both;
+    }
+
+    .hero-cta { animation: fadeUp 1s .45s ease both; }
+    .btn-primary-hero {
+      background: var(--amber);
+      color: #fff;
+      border: none;
+      border-radius: var(--radius-pill);
+      padding: .9rem 2.2rem;
+      font-family: 'Nunito', sans-serif;
+      font-weight: 800;
+      font-size: 1rem;
+      letter-spacing: .03em;
+      transition: all .25s ease;
+      box-shadow: 0 8px 28px rgba(224,122,32,.4);
+    }
+    .btn-primary-hero:hover {
+      background: var(--terra);
+      transform: translateY(-3px);
+      box-shadow: 0 14px 36px rgba(224,122,32,.45);
+      color: #fff;
+    }
+    .btn-ghost-hero {
+      background: transparent;
+      color: var(--bark);
+      border: 2px solid rgba(26,13,6,.2);
+      border-radius: var(--radius-pill);
+      padding: .85rem 2rem;
+      font-family: 'Nunito', sans-serif;
+      font-weight: 700;
+      font-size: 1rem;
+      transition: all .25s ease;
+    }
+    .btn-ghost-hero:hover {
+      border-color: var(--amber);
+      color: var(--amber);
+      transform: translateY(-2px);
+    }
+
+    .hero-image-wrap {
+      position: relative;
+      animation: fadeRight 1s .3s ease both;
+    }
+    .hero-image-wrap .hero-img-main {
+      width: 100%;
+      max-width: 520px;
+      border-radius: 40% 60% 55% 45% / 45% 55% 45% 55%;
+      box-shadow: var(--shadow-warm);
+      object-fit: cover;
+      aspect-ratio: 1;
+      animation: morphBlob 8s ease-in-out infinite;
+      background: linear-gradient(135deg, #C8986A, #8B5A2B);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12rem;
+      overflow: hidden;
+    }
+    @keyframes morphBlob {
+      0%, 100% { border-radius: 40% 60% 55% 45% / 45% 55% 45% 55%; }
+      33%       { border-radius: 60% 40% 40% 60% / 55% 45% 55% 45%; }
+      66%       { border-radius: 50% 50% 65% 35% / 35% 65% 50% 50%; }
+    }
+
+    .hero-chip {
+      position: absolute;
+      background: #fff;
+      border-radius: 20px;
+      padding: .9rem 1.3rem;
+      box-shadow: var(--shadow-card);
+      display: flex;
+      align-items: center;
+      gap: .7rem;
+      font-size: .82rem;
+      font-weight: 700;
+      animation: chipFloat 5s ease-in-out infinite;
+    }
+    .hero-chip .chip-icon { font-size: 1.6rem; }
+    .hero-chip .chip-label { font-size: .7rem; font-weight: 400; opacity: .6; display:block; }
+    .chip-1 { bottom: 15%; left: -5%; animation-delay: 0s; }
+    .chip-2 { top: 10%; right: -5%; animation-delay: 1.5s; }
+    @keyframes chipFloat {
+      0%,100% { transform: translateY(0); }
+      50%      { transform: translateY(-10px); }
+    }
+
+    @keyframes fadeUp   { from{opacity:0;transform:translateY(30px)} to{opacity:1;transform:none} }
+    @keyframes fadeRight{ from{opacity:0;transform:translateX(40px)} to{opacity:1;transform:none} }
+
+    /* ============================================================
+       STATS STRIP
+    ============================================================ */
+    .stats-strip {
+      background: var(--bark);
+      padding: 2.5rem 0;
+      position: relative;
+      overflow: hidden;
+    }
+    .stats-strip::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(90deg, rgba(255,255,255,.02) 0, rgba(255,255,255,.02) 1px, transparent 1px, transparent 60px);
+    }
+    .stat-item { text-align: center; }
+    .stat-number {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.5rem, 5vw, 4rem);
+      font-weight: 700;
+      color: var(--amber-light);
+      line-height: 1;
+      display: block;
+    }
+    .stat-label {
+      font-size: .8rem;
+      font-weight: 700;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,.55);
+      margin-top: .4rem;
+    }
+    .stat-divider {
+      width: 1px;
+      background: rgba(255,255,255,.1);
+      height: 60px;
+      align-self: center;
+    }
+
+    /* ============================================================
+       SECTION BASE
+    ============================================================ */
+    .section { padding: 6rem 0; }
+    .section-label {
+      font-size: .76rem;
+      font-weight: 800;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      color: var(--amber);
+      display: flex;
+      align-items: center;
+      gap: .6rem;
+      margin-bottom: .8rem;
+    }
+    .section-label::before {
+      content: '';
+      display: block;
+      width: 24px;
+      height: 2px;
+      background: var(--amber);
+    }
+    .section-title {
+      font-size: clamp(2.2rem, 4.5vw, 3.8rem);
+      color: var(--bark);
+    }
+    .section-title .italic { font-style: italic; color: var(--amber); }
+
+    /* ============================================================
+       WHY RESCUE — MISSION
+    ============================================================ */
+    .mission { background: var(--warm-white); }
+    .mission-card {
+      background: var(--cream);
+      border-radius: var(--radius-xl);
+      padding: 2rem;
+      border: 1px solid rgba(212,184,150,.4);
+      transition: transform .3s, box-shadow .3s;
+      height: 100%;
+    }
+    .mission-card:hover {
+      transform: translateY(-6px);
+      box-shadow: var(--shadow-card);
+    }
+    .mission-card .icon-wrap {
+      width: 56px; height: 56px;
+      border-radius: 16px;
+      background: var(--amber-glow);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.6rem;
+      margin-bottom: 1.2rem;
+      color: var(--amber);
+    }
+    .mission-card h4 {
+      font-size: 1.3rem;
+      color: var(--bark);
+      margin-bottom: .6rem;
+    }
+    .mission-card p {
+      font-size: .9rem;
+      line-height: 1.7;
+      opacity: .75;
+    }
+
+    /* ============================================================
+       DOGS — ADOPTION
+    ============================================================ */
+    .dogs { background: var(--cream-dark); }
+    .dog-card {
+      background: var(--warm-white);
+      border-radius: var(--radius-xl);
+      overflow: hidden;
+      box-shadow: var(--shadow-card);
+      transition: transform .35s cubic-bezier(.34,1.56,.64,1), box-shadow .35s ease;
+      height: 100%;
+    }
+    .dog-card:hover {
+      transform: translateY(-10px) scale(1.01);
+      box-shadow: 0 24px 64px rgba(26,13,6,.14);
+    }
+    .dog-img {
+      height: 240px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 7rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .dog-img-inner {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform .4s ease;
+      font-size: 7rem;
+    }
+    .dog-card:hover .dog-img-inner { transform: scale(1.08); }
+    .dog-status {
+      position: absolute;
+      top: 12px; left: 12px;
+      font-size: .72rem;
+      font-weight: 800;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      padding: .3rem .9rem;
+      border-radius: var(--radius-pill);
+    }
+    .status-urgent { background: #FF5722; color: #fff; }
+    .status-new    { background: var(--forest); color: #fff; }
+    .status-shy    { background: #9C27B0; color: #fff; }
+    .dog-body { padding: 1.4rem; }
+    .dog-name {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--bark);
+      margin-bottom: .2rem;
+    }
+    .dog-meta {
+      font-size: .8rem;
+      opacity: .6;
+      margin-bottom: 1rem;
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    .dog-meta span { display: flex; align-items: center; gap: .3rem; }
+    .dog-traits { display: flex; gap: .5rem; flex-wrap: wrap; margin-bottom: 1.2rem; }
+    .trait-tag {
+      font-size: .72rem;
+      font-weight: 700;
+      padding: .25rem .75rem;
+      border-radius: var(--radius-pill);
+      background: var(--amber-glow);
+      color: var(--amber);
+      border: 1px solid rgba(224,122,32,.25);
+    }
+    .btn-adopt {
+      width: 100%;
+      background: var(--amber);
+      color: #fff;
+      border: none;
+      border-radius: var(--radius-pill);
+      padding: .75rem;
+      font-weight: 800;
+      font-size: .9rem;
+      transition: all .25s;
+    }
+    .btn-adopt:hover { background: var(--terra); color: #fff; }
+
+    /* ============================================================
+       HOW TO HELP
+    ============================================================ */
+    .help { background: var(--warm-white); }
+    .help-tab {
+      border: none;
+      background: transparent;
+      border-bottom: 3px solid transparent;
+      font-family: 'Nunito', sans-serif;
+      font-weight: 700;
+      font-size: .9rem;
+      letter-spacing: .05em;
+      color: var(--bark-soft);
+      opacity: .5;
+      padding: .8rem 1.6rem;
+      transition: all .25s;
+    }
+    .help-tab.active {
+      border-bottom-color: var(--amber);
+      color: var(--amber);
+      opacity: 1;
+    }
+    .help-tab:hover { opacity: 1; color: var(--amber); }
+
+    .help-panel {
+      background: var(--cream);
+      border-radius: var(--radius-xl);
+      padding: 3rem;
+      border: 1px solid rgba(212,184,150,.4);
+    }
+    .help-panel h3 {
+      font-size: 2.2rem;
+      color: var(--bark);
+      margin-bottom: 1rem;
+    }
+    .help-panel p {
+      opacity: .75;
+      line-height: 1.75;
+      max-width: 420px;
+      margin-bottom: 1.8rem;
+    }
+
+    /* Donate amount buttons */
+    .amount-grid { display: flex; flex-wrap: wrap; gap: .8rem; margin-bottom: 1.5rem; }
+    .amount-btn {
+      flex: 1; min-width: 80px;
+      border: 2px solid rgba(212,184,150,.5);
+      background: transparent;
+      border-radius: 12px;
+      padding: .8rem;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--bark-soft);
+      cursor: pointer;
+      transition: all .2s;
+    }
+    .amount-btn:hover, .amount-btn.selected {
+      border-color: var(--amber);
+      background: var(--amber-glow);
+      color: var(--amber);
+    }
+    .amount-btn small { display: block; font-family: 'Nunito'; font-size: .65rem; font-weight: 600; opacity: .6; margin-top: .1rem; }
+
+    .donate-input-wrap {
+      position: relative;
+      margin-bottom: 1.5rem;
+    }
+    .donate-input-wrap .currency {
+      position: absolute;
+      left: 1rem; top: 50%;
+      transform: translateY(-50%);
+      font-weight: 800;
+      color: var(--amber);
+      font-size: 1.1rem;
+    }
+    .donate-input {
+      width: 100%;
+      padding: .9rem 1rem .9rem 2.5rem;
+      border: 2px solid rgba(212,184,150,.5);
+      border-radius: 12px;
+      background: #fff;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--bark);
+      transition: border-color .2s;
+    }
+    .donate-input:focus { outline: none; border-color: var(--amber); }
+
+    .btn-donate {
+      background: linear-gradient(135deg, var(--amber), var(--terra));
+      color: #fff;
+      border: none;
+      border-radius: var(--radius-pill);
+      padding: 1rem 2.5rem;
+      font-weight: 800;
+      font-size: 1rem;
+      width: 100%;
+      transition: all .25s;
+      box-shadow: 0 8px 28px rgba(224,122,32,.35);
+    }
+    .btn-donate:hover { transform: translateY(-3px); box-shadow: 0 14px 40px rgba(224,122,32,.45); color: #fff; }
+
+    .help-visual {
+      position: relative;
+      border-radius: var(--radius-xl);
+      overflow: hidden;
+      background: linear-gradient(135deg, var(--bark), #4A2210);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 400px;
+    }
+    .help-visual .big-emoji { font-size: 10rem; opacity: .9; }
+    .help-visual-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(26,13,6,.7), transparent 60%);
+    }
+    .help-visual-text {
+      position: absolute;
+      bottom: 2rem;
+      left: 2rem;
+      right: 2rem;
+      color: #fff;
+    }
+    .help-visual-text h4 {
+      font-size: 1.6rem;
+      margin-bottom: .4rem;
+    }
+    .help-visual-text p { font-size: .85rem; opacity: .75; }
+
+    /* ============================================================
+       PROCESS STEPS
+    ============================================================ */
+    .process { background: var(--cream-dark); }
+    .step-card {
+      text-align: center;
+      padding: 2rem 1.5rem;
+      position: relative;
+    }
+    .step-number {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 5rem;
+      font-weight: 700;
+      color: var(--amber);
+      opacity: .15;
+      line-height: 1;
+      margin-bottom: -.8rem;
+    }
+    .step-icon {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+      display: block;
+    }
+    .step-card h4 { font-size: 1.25rem; color: var(--bark); margin-bottom: .6rem; }
+    .step-card p  { font-size: .88rem; opacity: .7; line-height: 1.6; }
+    .step-connector {
+      position: absolute;
+      right: -16%;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 1.8rem;
+      color: var(--sand);
+      opacity: .5;
+    }
+
+    /* ============================================================
+       TESTIMONIALS
+    ============================================================ */
+    .testimonials { background: var(--bark); overflow: hidden; }
+    .testimonials .section-label { color: var(--amber-light); }
+    .testimonials .section-label::before { background: var(--amber-light); }
+    .testimonials .section-title { color: #fff; }
+
+    .testi-card {
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.1);
+      border-radius: var(--radius-xl);
+      padding: 2rem;
+      height: 100%;
+      transition: background .3s;
+    }
+    .testi-card:hover { background: rgba(255,255,255,.1); }
+    .testi-stars { color: var(--amber-light); font-size: 1rem; letter-spacing: .1em; margin-bottom: 1rem; }
+    .testi-text {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.2rem;
+      color: rgba(255,255,255,.85);
+      line-height: 1.65;
+      font-style: italic;
+      margin-bottom: 1.5rem;
+    }
+    .testi-author {
+      display: flex;
+      align-items: center;
+      gap: .9rem;
+    }
+    .testi-avatar {
+      width: 44px; height: 44px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.6rem;
+      background: rgba(255,255,255,.12);
+    }
+    .testi-name {
+      font-weight: 700;
+      font-size: .9rem;
+      color: #fff;
+      display: block;
+    }
+    .testi-role { font-size: .76rem; color: rgba(255,255,255,.45); }
+
+    /* ============================================================
+       IMPACT TIMELINE
+    ============================================================ */
+    .impact { background: var(--warm-white); }
+    .timeline { position: relative; padding-left: 2rem; }
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 0; bottom: 0;
+      width: 2px;
+      background: linear-gradient(to bottom, var(--amber), var(--forest));
+    }
+    .timeline-item {
+      position: relative;
+      padding-bottom: 2.5rem;
+      padding-left: 1.5rem;
+      opacity: 0;
+      transform: translateX(-20px);
+      transition: all .6s ease;
+    }
+    .timeline-item.visible { opacity: 1; transform: none; }
+    .timeline-item::before {
+      content: '';
+      position: absolute;
+      left: -2.3rem; top: .3rem;
+      width: 12px; height: 12px;
+      border-radius: 50%;
+      background: var(--amber);
+      border: 3px solid var(--warm-white);
+      box-shadow: 0 0 0 3px rgba(224,122,32,.25);
+    }
+    .timeline-item .year {
+      font-size: .75rem;
+      font-weight: 800;
+      letter-spacing: .12em;
+      color: var(--amber);
+      text-transform: uppercase;
+    }
+    .timeline-item h4 { font-size: 1.2rem; color: var(--bark); margin: .3rem 0 .4rem; }
+    .timeline-item p  { font-size: .87rem; opacity: .68; line-height: 1.6; }
+
+    /* ============================================================
+       CTA BAND
+    ============================================================ */
+    .cta-band {
+      background: linear-gradient(135deg, var(--forest) 0%, var(--forest-mid) 100%);
+      padding: 5rem 0;
+      position: relative;
+      overflow: hidden;
+    }
+    .cta-band::before {
+      content: '🐾';
+      position: absolute;
+      font-size: 20rem;
+      opacity: .05;
+      right: -3rem;
+      top: 50%;
+      transform: translateY(-50%);
+      pointer-events: none;
+    }
+    .cta-band h2 {
+      font-size: clamp(2rem, 5vw, 3.6rem);
+      color: #fff;
+    }
+    .cta-band p { color: rgba(255,255,255,.7); font-size: 1.05rem; line-height: 1.75; }
+    .btn-white {
+      background: #fff;
+      color: var(--forest);
+      border: none;
+      border-radius: var(--radius-pill);
+      padding: .95rem 2.4rem;
+      font-weight: 800;
+      font-size: 1rem;
+      transition: all .25s;
+      box-shadow: 0 8px 28px rgba(0,0,0,.2);
+    }
+    .btn-white:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 16px 40px rgba(0,0,0,.25);
+      color: var(--forest);
+    }
+    .btn-outline-white {
+      background: transparent;
+      color: #fff;
+      border: 2px solid rgba(255,255,255,.45);
+      border-radius: var(--radius-pill);
+      padding: .9rem 2rem;
+      font-weight: 700;
+      font-size: 1rem;
+      transition: all .25s;
+    }
+    .btn-outline-white:hover {
+      border-color: #fff;
+      color: #fff;
+      transform: translateY(-2px);
+    }
+
+    /* ============================================================
+       NEWSLETTER
+    ============================================================ */
+    .newsletter { background: var(--cream-dark); padding: 4rem 0; }
+    .newsletter-box {
+      background: linear-gradient(135deg, var(--bark), #4A2210);
+      border-radius: var(--radius-xl);
+      padding: 3.5rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .newsletter-box::after {
+      content: '🐶';
+      position: absolute;
+      right: 3rem; bottom: -1rem;
+      font-size: 9rem;
+      opacity: .12;
+    }
+    .newsletter-box h3 {
+      font-size: clamp(1.6rem, 4vw, 2.6rem);
+      color: #fff;
+      margin-bottom: .8rem;
+    }
+    .newsletter-box p { color: rgba(255,255,255,.65); font-size: .95rem; }
+    .newsletter-form {
+      display: flex;
+      gap: .8rem;
+      flex-wrap: wrap;
+      margin-top: 1.8rem;
+    }
+    .newsletter-input {
+      flex: 1; min-width: 200px;
+      background: rgba(255,255,255,.1);
+      border: 1px solid rgba(255,255,255,.2);
+      border-radius: var(--radius-pill);
+      padding: .85rem 1.4rem;
+      color: #fff;
+      font-family: 'Nunito', sans-serif;
+      font-size: .95rem;
+      transition: border .2s;
+    }
+    .newsletter-input::placeholder { color: rgba(255,255,255,.4); }
+    .newsletter-input:focus { outline: none; border-color: var(--amber-light); }
+
+    /* ============================================================
+       FOOTER
+    ============================================================ */
+    .footer {
+      background: var(--bark);
+      color: rgba(255,255,255,.65);
+      padding: 4rem 0 2rem;
+    }
+    .footer-brand {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2rem;
+      font-weight: 700;
+      color: #fff;
+      display: block;
+      margin-bottom: .5rem;
+    }
+    .footer-brand span { color: var(--amber-light); }
+    .footer-tagline { font-size: .85rem; opacity: .5; margin-bottom: 1.5rem; }
+    .footer-social {
+      display: flex;
+      gap: .7rem;
+    }
+    .social-btn {
+      width: 38px; height: 38px;
+      border-radius: 50%;
+      border: 1px solid rgba(255,255,255,.15);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: rgba(255,255,255,.55);
+      font-size: 1rem;
+      transition: all .2s;
+      text-decoration: none;
+    }
+    .social-btn:hover {
+      background: var(--amber);
+      border-color: var(--amber);
+      color: #fff;
+      transform: translateY(-2px);
+    }
+    .footer-heading {
+      font-family: 'Nunito', sans-serif;
+      font-size: .8rem;
+      font-weight: 800;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,.35);
+      margin-bottom: 1.2rem;
+    }
+    .footer-links { list-style: none; padding: 0; margin: 0; }
+    .footer-links li { margin-bottom: .6rem; }
+    .footer-links a {
+      color: rgba(255,255,255,.55);
+      text-decoration: none;
+      font-size: .88rem;
+      transition: color .2s;
+    }
+    .footer-links a:hover { color: var(--amber-light); }
+    .footer-bottom {
+      border-top: 1px solid rgba(255,255,255,.08);
+      margin-top: 3rem;
+      padding-top: 1.5rem;
+      font-size: .78rem;
+    }
+    .footer-bottom .heart { color: var(--amber); }
+
+    /* ============================================================
+       SCROLL REVEAL
+    ============================================================ */
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity .7s ease, transform .7s ease;
+    }
+    .reveal.visible { opacity: 1; transform: none; }
+    .reveal-delay-1 { transition-delay: .1s; }
+    .reveal-delay-2 { transition-delay: .2s; }
+    .reveal-delay-3 { transition-delay: .3s; }
+    .reveal-delay-4 { transition-delay: .4s; }
+
+    /* ============================================================
+       PROGRESS BARS
+    ============================================================ */
+    .prog-bar { background: rgba(255,255,255,.1); border-radius: 8px; height: 8px; margin-bottom: .4rem; overflow: hidden; }
+    .prog-fill { height: 100%; border-radius: 8px; background: linear-gradient(90deg, var(--amber-light), var(--amber)); width: 0; transition: width 1.5s ease; }
+
+    /* ============================================================
+       BACK TO TOP
+    ============================================================ */
+    #backTop {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      width: 48px; height: 48px;
+      background: var(--amber);
+      color: #fff;
+      border: none;
+      border-radius: 50%;
+      font-size: 1.2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 500;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all .3s;
+      box-shadow: 0 4px 20px rgba(224,122,32,.5);
+      cursor: pointer;
+    }
+    #backTop.show { opacity: 1; transform: none; }
+    #backTop:hover { background: var(--terra); transform: translateY(-3px); }
+
+    /* ============================================================
+       MOBILE TWEAKS
+    ============================================================ */
+    @media (max-width: 768px) {
+      .hero-image-wrap { margin-top: 3rem; }
+      .step-connector { display: none; }
+      .help-panel { padding: 1.5rem; }
+      .newsletter-box { padding: 2rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- CUSTOM CURSOR -->
+<div class="cursor" id="cursor"></div>
+
+<!-- =================== NAVBAR =================== -->
+<nav class="navbar navbar-expand-lg" id="mainNav">
+  <div class="container">
+    <a class="navbar-brand" href="#">Dog<span>Lovers</span></a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
+      <i class="bi bi-list fs-2"></i>
+    </button>
+    <div class="collapse navbar-collapse" id="navMenu">
+      <ul class="navbar-nav ms-auto align-items-center gap-1">
+        <li class="nav-item"><a class="nav-link" href="#mision">Misión</a></li>
+        <li class="nav-item"><a class="nav-link" href="#adoptar">Adoptar</a></li>
+        <li class="nav-item"><a class="nav-link" href="#ayudar">Ayudar</a></li>
+        <li class="nav-item"><a class="nav-link" href="#historia">Historia</a></li>
+        <li class="nav-item"><a class="nav-link" href="#contacto">Contacto</a></li>
+        <li class="nav-item ms-2">
+          <a class="nav-link btn-nav" href="#ayudar">Donar ahora</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- =================== HERO =================== -->
+<section class="hero" id="inicio">
+  <div class="hero-paws" aria-hidden="true">
+    <div class="paw">🐾</div><div class="paw">🐾</div><div class="paw">🐾</div>
+    <div class="paw">🐾</div><div class="paw">🐾</div><div class="paw">🐾</div>
+    <div class="paw">🐾</div><div class="paw">🐾</div>
+  </div>
+  <div class="hero-blob blob-1"></div>
+  <div class="hero-blob blob-2"></div>
+
+  <div class="container">
+    <div class="row align-items-center g-5">
+      <!-- Text -->
+      <div class="col-lg-6">
+        <div class="hero-badge">
+          <span class="dot"></span>
+          Fundación sin fines de lucro · Desde 2015
+        </div>
+        <h1 class="hero-title">
+          Cada perro<br>
+          merece un<br>
+          <span class="accent">hogar lleno</span><br>
+          <em>de amor</em>
+        </h1>
+        <p class="hero-sub">
+          Rescatamos, rehabilitamos y encontramos familias para perros callejeros. 
+          Tu apoyo transforma vidas — ambos lados de la correa.
+        </p>
+        <div class="hero-cta d-flex flex-wrap gap-3">
+          <a href="#adoptar" class="btn btn-primary-hero">
+            <i class="bi bi-heart-fill me-2"></i>Adoptar un perro
+          </a>
+          <a href="#ayudar" class="btn btn-ghost-hero">
+            <i class="bi bi-gift me-2"></i>Quiero donar
+          </a>
+        </div>
+      </div>
+      <!-- Image -->
+      <div class="col-lg-6 d-flex justify-content-center">
+        <div class="hero-image-wrap">
+          <div class="hero-img-main">
+            🐕
+          </div>
+          <!-- Chips -->
+          <div class="hero-chip chip-1">
+            <span class="chip-icon">🏠</span>
+            <div>
+              <strong>+3.200</strong>
+              <span class="chip-label">Perros adoptados</span>
+            </div>
+          </div>
+          <div class="hero-chip chip-2">
+            <span class="chip-icon">⭐</span>
+            <div>
+              <strong>4.9/5</strong>
+              <span class="chip-label">Satisfacción</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =================== STATS STRIP =================== -->
+<div class="stats-strip">
+  <div class="container">
+    <div class="row text-center g-4">
+      <div class="col-6 col-md-3">
+        <div class="stat-item">
+          <span class="stat-number counter" data-target="3248">0</span>
+          <span class="stat-label">Perros rescatados</span>
+        </div>
+      </div>
+      <div class="col-6 col-md-3">
+        <div class="stat-item">
+          <span class="stat-number counter" data-target="91">0</span><span class="stat-number" style="font-size:2.5rem">%</span>
+          <span class="stat-label">Tasa de adopción</span>
+        </div>
+      </div>
+      <div class="col-6 col-md-3">
+        <div class="stat-item">
+          <span class="stat-number counter" data-target="540">0</span>
+          <span class="stat-label">Familias felices</span>
+        </div>
+      </div>
+      <div class="col-6 col-md-3">
+        <div class="stat-item">
+          <span class="stat-number counter" data-target="9">0</span>
+          <span class="stat-number" style="font-size:2rem">años</span>
+          <span class="stat-label">De experiencia</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- =================== MISSION =================== -->
+<section class="section mission" id="mision">
+  <div class="container">
+    <div class="row align-items-center g-5 mb-5">
+      <div class="col-lg-5 reveal">
+        <div class="section-label">Nuestra misión</div>
+        <h2 class="section-title">¿Por qué <span class="italic">rescatar</span> importa?</h2>
+      </div>
+      <div class="col-lg-6 offset-lg-1 reveal reveal-delay-2">
+        <p style="font-size:1.05rem;line-height:1.85;opacity:.75">
+          Cada año, millones de perros enfrentan las calles solos, expuestos a peligros y enfermedades. 
+          Creemos que cada vida merece una segunda oportunidad, y cada familia que adopta descubre 
+          un amor incondicional que transforma para siempre.
+        </p>
+      </div>
+    </div>
+    <div class="row g-4">
+      <div class="col-md-6 col-lg-3 reveal reveal-delay-1">
+        <div class="mission-card">
+          <div class="icon-wrap"><i class="bi bi-shield-heart"></i></div>
+          <h4>Rescate urgente</h4>
+          <p>Actuamos rápido ante situaciones de peligro, disponibles las 24 horas para salvar vidas en riesgo.</p>
+        </div>
+      </div>
+      <div class="col-md-6 col-lg-3 reveal reveal-delay-2">
+        <div class="mission-card">
+          <div class="icon-wrap"><i class="bi bi-heart-pulse"></i></div>
+          <h4>Rehabilitación</h4>
+          <p>Atención veterinaria completa, vacunas, desparasitación y cuidado emocional profesional.</p>
+        </div>
+      </div>
+      <div class="col-md-6 col-lg-3 reveal reveal-delay-3">
+        <div class="mission-card">
+          <div class="icon-wrap"><i class="bi bi-house-heart"></i></div>
+          <h4>Hogares de tránsito</h4>
+          <p>Red de familias voluntarias que brindan amor temporal mientras encontramos hogar definitivo.</p>
+        </div>
+      </div>
+      <div class="col-md-6 col-lg-3 reveal reveal-delay-4">
+        <div class="mission-card">
+          <div class="icon-wrap"><i class="bi bi-people"></i></div>
+          <h4>Adopciones felices</h4>
+          <p>Acompañamiento post-adopción y comunidad activa para que cada historia termine bien.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =================== DOGS FOR ADOPTION =================== -->
+<section class="section dogs" id="adoptar">
+  <div class="container">
+    <div class="row mb-5">
+      <div class="col-lg-6 reveal">
+        <div class="section-label">Adopción</div>
+        <h2 class="section-title">Conoce a los que<br><span class="italic">buscan familia</span></h2>
+      </div>
+      <div class="col-lg-4 offset-lg-2 d-flex align-items-end reveal reveal-delay-2">
+        <p style="opacity:.65;font-size:.93rem;line-height:1.75">
+          Todos han sido rescatados, vacunados y están listos para dar y recibir amor. 
+          Cada adopción incluye acompañamiento de por vida.
+        </p>
+      </div>
+    </div>
+    <div class="row g-4">
+      <!-- Dog 1 -->
+      <div class="col-md-6 col-lg-4 reveal reveal-delay-1">
+        <div class="dog-card">
+          <div class="dog-img" style="background:linear-gradient(135deg,#F4C07A,#C8854A)">
+            <div class="dog-img-inner">🐶</div>
+            <span class="dog-status status-urgent">Urgente</span>
+          </div>
+          <div class="dog-body">
+            <div class="dog-name">Canela</div>
+            <div class="dog-meta">
+              <span><i class="bi bi-gender-female"></i> Hembra</span>
+              <span><i class="bi bi-calendar3"></i> 2 años</span>
+              <span><i class="bi bi-geo-alt"></i> Santiago</span>
+            </div>
+            <div class="dog-traits">
+              <span class="trait-tag">Juguetona</span>
+              <span class="trait-tag">Amigable</span>
+              <span class="trait-tag">Sociable</span>
+            </div>
+            <button class="btn-adopt">Quiero adoptar a Canela</button>
+          </div>
+        </div>
+      </div>
+      <!-- Dog 2 -->
+      <div class="col-md-6 col-lg-4 reveal reveal-delay-2">
+        <div class="dog-card">
+          <div class="dog-img" style="background:linear-gradient(135deg,#9BBFD4,#5A8FA8)">
+            <div class="dog-img-inner">🐕</div>
+            <span class="dog-status status-new">Recién llegado</span>
+          </div>
+          <div class="dog-body">
+            <div class="dog-name">Thunder</div>
+            <div class="dog-meta">
+              <span><i class="bi bi-gender-male"></i> Macho</span>
+              <span><i class="bi bi-calendar3"></i> 4 años</span>
+              <span><i class="bi bi-geo-alt"></i> Providencia</span>
+            </div>
+            <div class="dog-traits">
+              <span class="trait-tag">Tranquilo</span>
+              <span class="trait-tag">Leal</span>
+              <span class="trait-tag">Inteligente</span>
+            </div>
+            <button class="btn-adopt">Quiero adoptar a Thunder</button>
+          </div>
+        </div>
+      </div>
+      <!-- Dog 3 -->
+      <div class="col-md-6 col-lg-4 reveal reveal-delay-3">
+        <div class="dog-card">
+          <div class="dog-img" style="background:linear-gradient(135deg,#D4A4C8,#9A5A8C)">
+            <div class="dog-img-inner">🐩</div>
+            <span class="dog-status status-shy">Timida</span>
+          </div>
+          <div class="dog-body">
+            <div class="dog-name">Luna</div>
+            <div class="dog-meta">
+              <span><i class="bi bi-gender-female"></i> Hembra</span>
+              <span><i class="bi bi-calendar3"></i> 1 año</span>
+              <span><i class="bi bi-geo-alt"></i> Las Condes</span>
+            </div>
+            <div class="dog-traits">
+              <span class="trait-tag">Cariñosa</span>
+              <span class="trait-tag">Tímida</span>
+              <span class="trait-tag">Dulce</span>
+            </div>
+            <button class="btn-adopt">Quiero adoptar a Luna</button>
+          </div>
+        </div>
+      </div>
+      <!-- Dog 4 -->
+      <div class="col-md-6 col-lg-4 reveal reveal-delay-1">
+        <div class="dog-card">
+          <div class="dog-img" style="background:linear-gradient(135deg,#B8D4A0,#6A9850)">
+            <div class="dog-img-inner">🦮</div>
+            <span class="dog-status status-new">Recién llegado</span>
+          </div>
+          <div class="dog-body">
+            <div class="dog-name">Bosque</div>
+            <div class="dog-meta">
+              <span><i class="bi bi-gender-male"></i> Macho</span>
+              <span><i class="bi bi-calendar3"></i> 6 meses</span>
+              <span><i class="bi bi-geo-alt"></i> Vitacura</span>
+            </div>
+            <div class="dog-traits">
+              <span class="trait-tag">Energético</span>
+              <span class="trait-tag">Curioso</span>
+              <span class="trait-tag">Peludo</span>
+            </div>
+            <button class="btn-adopt">Quiero adoptar a Bosque</button>
+          </div>
+        </div>
+      </div>
+      <!-- Dog 5 -->
+      <div class="col-md-6 col-lg-4 reveal reveal-delay-2">
+        <div class="dog-card">
+          <div class="dog-img" style="background:linear-gradient(135deg,#F4D4A0,#C8A050)">
+            <div class="dog-img-inner">🐕‍🦺</div>
+            <span class="dog-status status-urgent">Urgente</span>
+          </div>
+          <div class="dog-body">
+            <div class="dog-name">Miel</div>
+            <div class="dog-meta">
+              <span><i class="bi bi-gender-female"></i> Hembra</span>
+              <span><i class="bi bi-calendar3"></i> 5 años</span>
+              <span><i class="bi bi-geo-alt"></i> Ñuñoa</span>
+            </div>
+            <div class="dog-traits">
+              <span class="trait-tag">Maternal</span>
+              <span class="trait-tag">Protectora</span>
+              <span class="trait-tag">Fiel</span>
+            </div>
+            <button class="btn-adopt">Quiero adoptar a Miel</button>
+          </div>
+        </div>
+      </div>
+      <!-- Dog 6 -->
+      <div class="col-md-6 col-lg-4 reveal reveal-delay-3">
+        <div class="dog-card">
+          <div class="dog-img" style="background:linear-gradient(135deg,#C4B4E4,#7A60B8)">
+            <div class="dog-img-inner">🐾</div>
+            <span class="dog-status status-shy">Especial</span>
+          </div>
+          <div class="dog-body">
+            <div class="dog-name">Cosmos</div>
+            <div class="dog-meta">
+              <span><i class="bi bi-gender-male"></i> Macho</span>
+              <span><i class="bi bi-calendar3"></i> 3 años</span>
+              <span><i class="bi bi-geo-alt"></i> La Florida</span>
+            </div>
+            <div class="dog-traits">
+              <span class="trait-tag">Independiente</span>
+              <span class="trait-tag">Sereno</span>
+              <span class="trait-tag">Único</span>
+            </div>
+            <button class="btn-adopt">Quiero adoptar a Cosmos</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="text-center mt-5 reveal">
+      <a href="#" class="btn btn-ghost-hero">
+        Ver todos los perros disponibles <i class="bi bi-arrow-right ms-2"></i>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- =================== HOW TO HELP =================== -->
+<section class="section help" id="ayudar">
+  <div class="container">
+    <div class="text-center mb-5 reveal">
+      <div class="section-label justify-content-center">Formas de ayudar</div>
+      <h2 class="section-title">Tu <span class="italic">apoyo</span> cambia vidas</h2>
+    </div>
+
+    <!-- Tabs -->
+    <div class="d-flex justify-content-center flex-wrap gap-1 mb-4 border-bottom pb-0 reveal">
+      <button class="help-tab active" onclick="switchTab(event,'donate')">💛 Donar</button>
+      <button class="help-tab" onclick="switchTab(event,'volunteer')">🤝 Voluntariado</button>
+      <button class="help-tab" onclick="switchTab(event,'foster')">🏠 Hogar de tránsito</button>
+    </div>
+
+    <!-- Donate Panel -->
+    <div id="tab-donate" class="help-panel-wrapper">
+      <div class="help-panel">
+        <div class="row g-5 align-items-center">
+          <div class="col-lg-6">
+            <h3>Dona y salva<br><em>una vida hoy</em></h3>
+            <p>Cada peso que donas va directamente a veterinarios, alimento y refugio para nuestros rescatados. Transparencia total, impacto real.</p>
+            <div class="amount-grid">
+              <button class="amount-btn selected" onclick="selectAmount(this,'5000')">$5.000<small>1 día alimento</small></button>
+              <button class="amount-btn" onclick="selectAmount(this,'15000')">$15.000<small>Vacuna</small></button>
+              <button class="amount-btn" onclick="selectAmount(this,'30000')">$30.000<small>Consulta vet.</small></button>
+              <button class="amount-btn" onclick="selectAmount(this,'50000')">$50.000<small>Semana completa</small></button>
+            </div>
+            <div class="donate-input-wrap">
+              <span class="currency">$</span>
+              <input class="donate-input" type="number" id="donateAmt" value="5000" placeholder="Monto personalizado">
+            </div>
+            <button class="btn btn-donate">
+              <i class="bi bi-heart-fill me-2"></i>Donar ahora con seguridad
+            </button>
+            <p style="font-size:.75rem;opacity:.5;margin-top:1rem;text-align:center">
+              <i class="bi bi-lock-fill me-1"></i>Pago 100% seguro · Recibo tributario · Sin comisiones
+            </p>
+          </div>
+          <div class="col-lg-5 offset-lg-1">
+            <div class="help-visual">
+              <div class="big-emoji">🐕</div>
+              <div class="help-visual-overlay"></div>
+              <div class="help-visual-text">
+                <h4>Impacto de tu donación</h4>
+                <div class="mt-3">
+                  <div class="d-flex justify-content-between mb-1"><span style="font-size:.8rem;color:rgba(255,255,255,.7)">Atención veterinaria</span><span style="font-size:.8rem;color:#fff;font-weight:700">45%</span></div>
+                  <div class="prog-bar"><div class="prog-fill" data-width="45"></div></div>
+                  <div class="d-flex justify-content-between mb-1 mt-2"><span style="font-size:.8rem;color:rgba(255,255,255,.7)">Alimentación</span><span style="font-size:.8rem;color:#fff;font-weight:700">30%</span></div>
+                  <div class="prog-bar"><div class="prog-fill" data-width="30"></div></div>
+                  <div class="d-flex justify-content-between mb-1 mt-2"><span style="font-size:.8rem;color:rgba(255,255,255,.7)">Rescate y traslado</span><span style="font-size:.8rem;color:#fff;font-weight:700">15%</span></div>
+                  <div class="prog-bar"><div class="prog-fill" data-width="15"></div></div>
+                  <div class="d-flex justify-content-between mb-1 mt-2"><span style="font-size:.8rem;color:rgba(255,255,255,.7)">Educación y difusión</span><span style="font-size:.8rem;color:#fff;font-weight:700">10%</span></div>
+                  <div class="prog-bar"><div class="prog-fill" data-width="10"></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Volunteer Panel -->
+    <div id="tab-volunteer" class="help-panel-wrapper" style="display:none">
+      <div class="help-panel">
+        <div class="row g-5 align-items-center">
+          <div class="col-lg-6">
+            <h3>Dona tu <em>tiempo y amor</em></h3>
+            <p>Nuestros voluntarios son el corazón de Dog Lovers. No necesitas experiencia, solo amor por los animales y ganas de hacer la diferencia.</p>
+            <div class="row g-3 mt-2">
+              <div class="col-12">
+                <input type="text" class="donate-input" placeholder="Tu nombre completo" style="padding:.85rem 1.2rem">
+              </div>
+              <div class="col-12">
+                <input type="email" class="donate-input" placeholder="Correo electrónico" style="padding:.85rem 1.2rem">
+              </div>
+              <div class="col-12">
+                <select class="donate-input" style="padding:.85rem 1.2rem;background:#fff;color:var(--bark-soft)">
+                  <option>¿En qué área quieres ayudar?</option>
+                  <option>Paseos y compañía</option>
+                  <option>Transporte de rescates</option>
+                  <option>Redes sociales y comunicación</option>
+                  <option>Eventos y ferias de adopción</option>
+                  <option>Atención veterinaria (profesional)</option>
+                </select>
+              </div>
+              <div class="col-12">
+                <button class="btn btn-donate">
+                  <i class="bi bi-people-fill me-2"></i>Quiero ser voluntario
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-5 offset-lg-1">
+            <div class="help-visual" style="background:linear-gradient(135deg,var(--forest),#1A3A0A)">
+              <div class="big-emoji">🤝</div>
+              <div class="help-visual-overlay"></div>
+              <div class="help-visual-text">
+                <h4>+180 voluntarios activos</h4>
+                <p>Únete a nuestra red de personas apasionadas que dedican su tiempo a hacer el mundo más justo para los animales.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Foster Panel -->
+    <div id="tab-foster" class="help-panel-wrapper" style="display:none">
+      <div class="help-panel">
+        <div class="row g-5 align-items-center">
+          <div class="col-lg-6">
+            <h3>Abre tu <em>corazón y hogar</em></h3>
+            <p>Un hogar de tránsito cambia todo para un perro rescatado. Nosotros cubrimos los gastos veterinarios y el alimento — tú solo das amor y espacio.</p>
+            <ul class="list-unstyled mt-3 mb-4" style="font-size:.93rem;opacity:.75">
+              <li class="mb-2"><i class="bi bi-check-circle-fill me-2" style="color:var(--amber)"></i>Gastos veterinarios cubiertos al 100%</li>
+              <li class="mb-2"><i class="bi bi-check-circle-fill me-2" style="color:var(--amber)"></i>Alimento y suministros incluidos</li>
+              <li class="mb-2"><i class="bi bi-check-circle-fill me-2" style="color:var(--amber)"></i>Soporte y orientación constante</li>
+              <li class="mb-2"><i class="bi bi-check-circle-fill me-2" style="color:var(--amber)"></i>Red de apoyo entre familias tránsito</li>
+              <li class="mb-2"><i class="bi bi-check-circle-fill me-2" style="color:var(--amber)"></i>Puedes adoptar si lo deseas</li>
+            </ul>
+            <button class="btn btn-donate">
+              <i class="bi bi-house-heart-fill me-2"></i>Quiero ser hogar de tránsito
+            </button>
+          </div>
+          <div class="col-lg-5 offset-lg-1">
+            <div class="help-visual" style="background:linear-gradient(135deg,#8B3A0F,#3A1506)">
+              <div class="big-emoji">🏠</div>
+              <div class="help-visual-overlay"></div>
+              <div class="help-visual-text">
+                <h4>96 hogares tránsito activos</h4>
+                <p>Familias que brindan amor temporal mientras nuestros perros esperan su hogar definitivo.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- =================== PROCESS =================== -->
+<section class="section process" id="proceso">
+  <div class="container">
+    <div class="text-center mb-5 reveal">
+      <div class="section-label justify-content-center">Proceso de adopción</div>
+      <h2 class="section-title">4 pasos hacia <span class="italic">un amor infinito</span></h2>
+    </div>
+    <div class="row g-4">
+      <div class="col-md-6 col-lg-3 reveal reveal-delay-1">
+        <div class="step-card">
+          <div class="step-number">01</div>
+          <span class="step-icon">🔍</span>
+          <h4>Explora perfiles</h4>
+          <p>Navega nuestro catálogo de perritos disponibles y encuentra el que mejor se adapta a tu estilo de vida.</p>
+          <span class="step-connector d-none d-lg-block"><i class="bi bi-arrow-right"></i></span>
+        </div>
+      </div>
+      <div class="col-md-6 col-lg-3 reveal reveal-delay-2">
+        <div class="step-card">
+          <div class="step-number">02</div>
+          <span class="step-icon">📋</span>
+          <h4>Postula online</h4>
+          <p>Completa nuestro formulario de adopción responsable. Solo tomará 5 minutos y nos ayuda a hacer el match perfecto.</p>
+          <span class="step-connector d-none d-lg-block"><i class="bi bi-arrow-right"></i></span>
+        </div>
+      </div>
+      <div class="col-md-6 col-lg-3 reveal reveal-delay-3">
+        <div class="step-card">
+          <div class="step-number">03</div>
+          <span class="step-icon">🤝</span>
+          <h4>Entrevista y visita</h4>
+          <p>Una de nuestras coordinadoras te contactará para agendar una visita y presentarte a tu futuro compañero.</p>
+          <span class="step-connector d-none d-lg-block"><i class="bi bi-arrow-right"></i></span>
+        </div>
+      </div>
+      <div class="col-md-6 col-lg-3 reveal reveal-delay-4">
+        <div class="step-card">
+          <div class="step-number">04</div>
+          <span class="step-icon">🏠</span>
+          <h4>¡Bienvenido a casa!</h4>
+          <p>El día más feliz para ambos. Te entregamos con guía de adaptación y acceso a nuestra comunidad de familias.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =================== IMPACT TIMELINE =================== -->
+<section class="section impact" id="historia">
+  <div class="container">
+    <div class="row g-5">
+      <div class="col-lg-5 reveal">
+        <div class="section-label">Nuestra historia</div>
+        <h2 class="section-title mb-4">Años de <span class="italic">impacto real</span></h2>
+        <p style="opacity:.7;line-height:1.8;font-size:.96rem">
+          Lo que comenzó como una pequeña iniciativa de rescate en un parque de Santiago, 
+          se convirtió en una fundación que ha transformado miles de vidas — caninas y humanas.
+        </p>
+        <div class="mt-4">
+          <div class="d-flex align-items-center gap-3 mb-3">
+            <div style="width:52px;height:52px;background:var(--amber-glow);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:1.5rem;flex-shrink:0">🏆</div>
+            <div>
+              <div style="font-weight:800;font-size:.9rem;color:var(--bark)">Premio Nacional Animal 2022</div>
+              <div style="font-size:.8rem;opacity:.6">Mejor fundación de rescate de Chile</div>
+            </div>
+          </div>
+          <div class="d-flex align-items-center gap-3">
+            <div style="width:52px;height:52px;background:rgba(46,82,24,.1);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:1.5rem;flex-shrink:0">🌿</div>
+            <div>
+              <div style="font-weight:800;font-size:.9rem;color:var(--bark)">Certificación ONG Responsable</div>
+              <div style="font-size:.8rem;opacity:.6">Transparencia y buenas prácticas</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-6 offset-lg-1">
+        <div class="timeline">
+          <div class="timeline-item">
+            <div class="year">2015</div>
+            <h4>Los primeros pasos 🐾</h4>
+            <p>Tres amigas rescatan sus primeros 12 perros del Parque O'Higgins. Nace Dog Lovers de manera informal.</p>
+          </div>
+          <div class="timeline-item">
+            <div class="year">2017</div>
+            <h4>Fundación oficial 📋</h4>
+            <p>Constitución legal, primer refugio en Pudahuel y conformación del equipo veterinario permanente.</p>
+          </div>
+          <div class="timeline-item">
+            <div class="year">2019</div>
+            <h4>Expansión regional 🗺️</h4>
+            <p>Apertura de redes de rescate en Valparaíso y Concepción. +500 perros rescatados ese año.</p>
+          </div>
+          <div class="timeline-item">
+            <div class="year">2021</div>
+            <h4>Plataforma digital 💻</h4>
+            <p>Lanzamos nuestra app de adopciones y la red de hogares tránsito digital. Multiplicamos el alcance.</p>
+          </div>
+          <div class="timeline-item">
+            <div class="year">2024</div>
+            <h4>Récord histórico 🎉</h4>
+            <p>Superamos los 3.000 perros rescatados y el 90% de tasa de adopción. El mayor hito de nuestra historia.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =================== TESTIMONIALS =================== -->
+<section class="section testimonials" id="testimonios">
+  <div class="container">
+    <div class="text-center mb-5 reveal">
+      <div class="section-label justify-content-center">Testimonios</div>
+      <h2 class="section-title">Historias que <span class="italic" style="color:var(--amber-light)">enamoran</span></h2>
+    </div>
+    <div class="row g-4">
+      <div class="col-md-6 col-lg-4 reveal reveal-delay-1">
+        <div class="testi-card">
+          <div class="testi-stars">★★★★★</div>
+          <div class="testi-text">"Adoptar a Rocco fue la mejor decisión de mi vida. El proceso fue tan cuidadoso y humano que supe que estaba en manos de personas que realmente aman lo que hacen."</div>
+          <div class="testi-author">
+            <div class="testi-avatar">👩</div>
+            <div>
+              <span class="testi-name">Valentina Morales</span>
+              <span class="testi-role">Adoptante · Santiago</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6 col-lg-4 reveal reveal-delay-2">
+        <div class="testi-card">
+          <div class="testi-stars">★★★★★</div>
+          <div class="testi-text">"Fui hogar de tránsito por primera vez y fue una experiencia transformadora. El equipo me acompañó en cada paso. Ya van 4 perros que hemos acogido con mi familia."</div>
+          <div class="testi-author">
+            <div class="testi-avatar">👨</div>
+            <div>
+              <span class="testi-name">Rodrigo Saavedra</span>
+              <span class="testi-role">Hogar tránsito · Providencia</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6 col-lg-4 reveal reveal-delay-3">
+        <div class="testi-card">
+          <div class="testi-stars">★★★★★</div>
+          <div class="testi-text">"Vine a donar y me fui con Luna bajo el brazo. No lo planeé, pero ella me eligió a mí. Dog Lovers no rescata solo perros, también rescata personas."</div>
+          <div class="testi-author">
+            <div class="testi-avatar">👩‍🦱</div>
+            <div>
+              <span class="testi-name">Catalina Ruiz</span>
+              <span class="testi-role">Adoptante y donante · Ñuñoa</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =================== CTA BAND =================== -->
+<section class="cta-band">
+  <div class="container">
+    <div class="row align-items-center g-4">
+      <div class="col-lg-6 reveal">
+        <h2>¿Listo para cambiar<br>una vida para <em>siempre</em>?</h2>
+        <p class="mt-3">Ya sea adoptando, donando, siendo voluntario o abriendo tu hogar, cada acción cuenta. La diferencia empieza hoy.</p>
+        <div class="d-flex flex-wrap gap-3 mt-4">
+          <a href="#adoptar" class="btn btn-white">
+            <i class="bi bi-heart-fill me-2" style="color:var(--amber)"></i>Adoptar ahora
+          </a>
+          <a href="#ayudar" class="btn btn-outline-white">Otras formas de ayudar</a>
+        </div>
+      </div>
+      <div class="col-lg-5 offset-lg-1 text-center reveal reveal-delay-2">
+        <div style="font-size:8rem;line-height:1;animation:pawFloat 4s ease-in-out infinite">🐾</div>
+        <p style="color:rgba(255,255,255,.55);font-size:.88rem;margin-top:1rem">
+          Cada huella que aparece aquí representa<br>una vida que encontró su lugar en el mundo.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =================== NEWSLETTER =================== -->
+<section class="newsletter" id="contacto">
+  <div class="container">
+    <div class="newsletter-box reveal">
+      <div class="row align-items-center g-4">
+        <div class="col-lg-5">
+          <h3>Únete a nuestra comunidad <em>canina</em></h3>
+          <p class="mt-2">Recibe historias de rescate, novedades y convocatorias de adopción directo en tu correo. Sin spam, solo amor peludo.</p>
+          <div class="newsletter-form">
+            <input class="newsletter-input" type="email" placeholder="tucorreo@ejemplo.com">
+            <button class="btn btn-primary-hero">Suscribirme</button>
+          </div>
+          <p style="font-size:.73rem;color:rgba(255,255,255,.35);margin-top:.8rem">
+            <i class="bi bi-shield-check me-1"></i>Nunca compartimos tu datos. Puedes cancelar cuando quieras.
+          </p>
+        </div>
+        <div class="col-lg-5 offset-lg-2 d-none d-lg-block text-end">
+          <div style="font-size:.85rem;color:rgba(255,255,255,.55);margin-bottom:1.2rem">Síguenos en redes sociales</div>
+          <div class="d-flex flex-wrap gap-3 justify-content-end">
+            <a href="#" style="color:rgba(255,255,255,.7);font-size:.9rem;font-weight:600;text-decoration:none">
+              <i class="bi bi-instagram me-1 fs-5"></i>Instagram
+            </a>
+            <a href="#" style="color:rgba(255,255,255,.7);font-size:.9rem;font-weight:600;text-decoration:none">
+              <i class="bi bi-facebook me-1 fs-5"></i>Facebook
+            </a>
+            <a href="#" style="color:rgba(255,255,255,.7);font-size:.9rem;font-weight:600;text-decoration:none">
+              <i class="bi bi-tiktok me-1 fs-5"></i>TikTok
+            </a>
+            <a href="#" style="color:rgba(255,255,255,.7);font-size:.9rem;font-weight:600;text-decoration:none">
+              <i class="bi bi-youtube me-1 fs-5"></i>YouTube
+            </a>
+          </div>
+          <div style="margin-top:2.5rem;font-size:4rem;opacity:.25;text-align:right">🐕</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =================== FOOTER =================== -->
+<footer class="footer">
+  <div class="container">
+    <div class="row g-4">
+      <!-- Brand -->
+      <div class="col-lg-4">
+        <span class="footer-brand">Dog<span>Lovers</span></span>
+        <p class="footer-tagline">Fundación de Rescate Canino · Chile</p>
+        <p style="font-size:.87rem;line-height:1.75;max-width:280px">
+          Comprometidos con el bienestar animal desde 2015. 
+          Cada rescate es una historia de esperanza y amor.
+        </p>
+        <div class="footer-social mt-3">
+          <a href="#" class="social-btn"><i class="bi bi-instagram"></i></a>
+          <a href="#" class="social-btn"><i class="bi bi-facebook"></i></a>
+          <a href="#" class="social-btn"><i class="bi bi-tiktok"></i></a>
+          <a href="#" class="social-btn"><i class="bi bi-youtube"></i></a>
+          <a href="#" class="social-btn"><i class="bi bi-whatsapp"></i></a>
+        </div>
+      </div>
+      <!-- Quick links -->
+      <div class="col-6 col-lg-2">
+        <p class="footer-heading">Navegación</p>
+        <ul class="footer-links">
+          <li><a href="#mision">Misión</a></li>
+          <li><a href="#adoptar">Adoptar</a></li>
+          <li><a href="#ayudar">Donar</a></li>
+          <li><a href="#ayudar">Voluntariado</a></li>
+          <li><a href="#historia">Historia</a></li>
+        </ul>
+      </div>
+      <div class="col-6 col-lg-2">
+        <p class="footer-heading">Ayuda</p>
+        <ul class="footer-links">
+          <li><a href="#">Cómo adoptar</a></li>
+          <li><a href="#">Hogar tránsito</a></li>
+          <li><a href="#">Reportar perro</a></li>
+          <li><a href="#">Donaciones</a></li>
+          <li><a href="#">Transparencia</a></li>
+        </ul>
+      </div>
+      <!-- Contact -->
+      <div class="col-lg-4">
+        <p class="footer-heading">Contacto</p>
+        <ul class="footer-links">
+          <li><i class="bi bi-envelope me-2"></i>hola@doglovers.cl</li>
+          <li><i class="bi bi-telephone me-2"></i>+56 9 8765 4321</li>
+          <li><i class="bi bi-geo-alt me-2"></i>Av. Perú 1245, Recoleta, Santiago</li>
+          <li class="mt-2"><i class="bi bi-clock me-2"></i>Lun–Vie 9:00–18:00</li>
+        </ul>
+        <div class="mt-3">
+          <span style="background:rgba(224,122,32,.2);color:var(--amber-light);font-size:.75rem;font-weight:700;padding:.35rem .9rem;border-radius:20px;letter-spacing:.08em">
+            🚨 Emergencias 24h: +56 9 9999 0000
+          </span>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom d-flex flex-wrap justify-content-between align-items-center gap-2">
+      <span>© 2025 Dog Lovers · Fundación sin fines de lucro · RUT 76.123.456-7</span>
+      <span>Hecho con <span class="heart">♥</span> por y para los peludos de Chile</span>
+    </div>
+  </div>
+</footer>
+
+<!-- BACK TO TOP -->
+<button id="backTop" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Volver arriba">
+  <i class="bi bi-arrow-up"></i>
+</button>
+
+<!-- Bootstrap 5 JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+/* ============================================================
+   CUSTOM CURSOR
+============================================================ */
+const cursor = document.getElementById('cursor');
+document.addEventListener('mousemove', e => {
+  cursor.style.left = e.clientX - 9 + 'px';
+  cursor.style.top  = e.clientY - 9 + 'px';
+});
+document.querySelectorAll('a,button,.dog-card,.mission-card,.testi-card').forEach(el => {
+  el.addEventListener('mouseenter', () => cursor.classList.add('active'));
+  el.addEventListener('mouseleave', () => cursor.classList.remove('active'));
+});
+
+/* ============================================================
+   NAVBAR SCROLL
+============================================================ */
+const nav = document.getElementById('mainNav');
+window.addEventListener('scroll', () => {
+  nav.classList.toggle('scrolled', window.scrollY > 60);
+  document.getElementById('backTop').classList.toggle('show', window.scrollY > 400);
+});
+
+/* ============================================================
+   SCROLL REVEAL
+============================================================ */
+const revealObserver = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.classList.add('visible');
+      revealObserver.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.12 });
+document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+/* Timeline items */
+const timelineObs = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.classList.add('visible');
+    }
+  });
+}, { threshold: 0.2 });
+document.querySelectorAll('.timeline-item').forEach(el => timelineObs.observe(el));
+
+/* Progress bars */
+const progObs = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.querySelectorAll('.prog-fill').forEach(bar => {
+        bar.style.width = bar.dataset.width + '%';
+      });
+      progObs.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.3 });
+document.querySelectorAll('.help-visual').forEach(el => progObs.observe(el));
+
+/* ============================================================
+   COUNTER ANIMATION
+============================================================ */
+function animateCounter(el, target, duration = 2000) {
+  let start = 0;
+  const step = target / (duration / 16);
+  const timer = setInterval(() => {
+    start += step;
+    if (start >= target) { el.textContent = target.toLocaleString('es-CL'); clearInterval(timer); }
+    else { el.textContent = Math.floor(start).toLocaleString('es-CL'); }
+  }, 16);
+}
+const counterObs = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      animateCounter(e.target, parseInt(e.target.dataset.target));
+      counterObs.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.5 });
+document.querySelectorAll('.counter').forEach(el => counterObs.observe(el));
+
+/* ============================================================
+   HELP TABS
+============================================================ */
+function switchTab(e, tabId) {
+  document.querySelectorAll('.help-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.help-panel-wrapper').forEach(p => p.style.display = 'none');
+  e.currentTarget.classList.add('active');
+  const panel = document.getElementById('tab-' + tabId);
+  panel.style.display = 'block';
+  panel.style.opacity = '0';
+  panel.style.transform = 'translateY(12px)';
+  setTimeout(() => {
+    panel.style.transition = 'opacity .4s, transform .4s';
+    panel.style.opacity = '1';
+    panel.style.transform = 'none';
+  }, 10);
+}
+
+/* ============================================================
+   DONATE AMOUNT BUTTONS
+============================================================ */
+function selectAmount(btn, amount) {
+  document.querySelectorAll('.amount-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  document.getElementById('donateAmt').value = amount;
+}
+
+/* ============================================================
+   SMOOTH ACTIVE NAV
+============================================================ */
+const sections = document.querySelectorAll('section[id]');
+const navLinks = document.querySelectorAll('.nav-link');
+window.addEventListener('scroll', () => {
+  let current = '';
+  sections.forEach(s => {
+    if (window.scrollY >= s.offsetTop - 120) current = s.id;
+  });
+  navLinks.forEach(l => {
+    l.style.color = '';
+    if (l.getAttribute('href') === '#' + current) l.style.color = 'var(--amber)';
+  });
+});
+
+/* ============================================================
+   PARALLAX HERO BLOBS
+============================================================ */
+window.addEventListener('scroll', () => {
+  const sy = window.scrollY;
+  document.querySelector('.blob-1').style.transform = `translateY(${sy * .15}px)`;
+  document.querySelector('.blob-2').style.transform = `translateY(${sy * -.1}px)`;
+});
+</script>
+</body>
+</html>
